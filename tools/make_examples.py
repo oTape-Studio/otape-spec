@@ -206,6 +206,11 @@ def sample_tone() -> None:
             "where the source was paused.</p>\n<img src=\"../artwork/jcard-front.png\" alt=\"Cover\" width=\"120\">\n"
             "</body></html>\n").encode(),
         "docs/notes.md": b"# Test Tones\n\nAn example cassette for oTAPE 1.0 implementers.\n",
+        "docs/license.txt": (
+            "Test Tones, an oTAPE example cassette\n"
+            "Copyright (c) 2026 Jan Osio\n\n"
+            "Licensed under the Creative Commons Attribution 4.0 International licence (CC BY 4.0).\n"
+            "https://creativecommons.org/licenses/by/4.0/\n").encode(),
     }
     manifest = {
         "format": "oTAPE",
@@ -222,6 +227,12 @@ def sample_tone() -> None:
             "created_at": "2026-10-29T12:00:00Z",
             "modified_at": "2026-10-29T12:05:00Z",
             "created_with": "oTAPE make_examples.py",
+            "rights": {
+                "copyright": "© 2026 Jan Osio",
+                "license": "CC-BY-4.0",
+                "license_url": "https://creativecommons.org/licenses/by/4.0/",
+                "file": "docs/license.txt",
+            },
         },
         "sides": {
             "A": {

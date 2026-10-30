@@ -72,7 +72,8 @@
         "generation": { "type": "integer", "minimum": 0 },
         "source_cassette_id": { "$ref": "#/$defs/uuid" },
         "location": { "type": "string" },
-        "date_recorded": { "type": "string" }
+        "date_recorded": { "type": "string" },
+        "rights": { "$ref": "#/$defs/rights" }
       },
       "allOf": [
         { "if": { "properties": { "type": { "const": "C46" } } }, "then": { "properties": { "side_length_seconds": { "const": 1380 } } } },
@@ -80,6 +81,26 @@
         { "if": { "properties": { "type": { "const": "C90" } } }, "then": { "properties": { "side_length_seconds": { "const": 2700 } } } },
         { "if": { "properties": { "type": { "const": "C120" } } }, "then": { "properties": { "side_length_seconds": { "const": 3600 } } } }
       ]
+    },
+    "rights": {
+      "type": "object",
+      "description": "Copyright and licence of the cassette's contents (spec section 6.4). Informational, not DRM.",
+      "properties": {
+        "copyright": { "type": "string", "maxLength": 500 },
+        "license": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SPDX license expression, LicenseRef-<name>, or all-rights-reserved."
+        },
+        "license_url": { "type": "string", "format": "uri" },
+        "file": {
+          "allOf": [
+            { "$ref": "#/$defs/path" },
+            { "pattern": "\\.(txt|md)$" }
+          ],
+          "description": "UTF-8 plain text or CommonMark; never HTML. Recommended: docs/license.txt."
+        }
+      }
     },
     "audio": {
       "type": "object",

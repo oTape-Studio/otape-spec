@@ -51,7 +51,7 @@
     "height": 101.6,
     "front_width": 63.5,
     "spine_width": 12.7,
-    "flap_width": 15.9,
+    "flap_width": 25.4,
     "unfolded_order": ["flap", "spine", "front"],
     "safe_inset": 3.0,
     "spine_safe_inset": 1.5,
@@ -65,7 +65,7 @@
     "label_b": { "width": 89.0, "height": 42.0, "path": "artwork/label-b.png", "alpha": "keep-out" },
     "jcard_front": { "width": 63.5, "height": 101.6, "path": "artwork/jcard-front.jpg", "alpha": "none" },
     "jcard_spine": { "width": 12.7, "height": 101.6, "path": "artwork/jcard-spine.png", "alpha": "none" },
-    "jcard_flap": { "width": 15.9, "height": 101.6, "path": "artwork/jcard-flap.png", "alpha": "none" },
+    "jcard_flap": { "width": 25.4, "height": 101.6, "path": "artwork/jcard-flap.png", "alpha": "none" },
     "booklet_panel": { "width": 63.5, "height": 101.6, "path": "artwork/booklet-NN.png", "alpha": "none" },
     "thumbnail": { "square": true, "recommended_px": 1024, "minimum_px": 256, "path": "artwork/thumbnail.png", "alpha": "allowed" }
   },

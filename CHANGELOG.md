@@ -14,6 +14,7 @@ First public version, by Jan Osio.
 - Artwork slots with fixed physical sizes, keep-out zones, safe areas and layering
 - Fold-out booklet panels, a sandboxed HTML booklet profile, Markdown notes
 - Track markers, history events, extensions, and preservation of unknown data
+- `cassette.rights`: copyright notice, SPDX licence and an optional plain-text licence file (`docs/license.txt`)
 - JSON Schema, machine-readable geometry, SVG templates, example manifests and cassettes, validator
 
 Appendix A of the specification lists the changes from the earlier draft.

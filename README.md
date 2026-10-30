@@ -22,7 +22,7 @@ my-mixtape.otape                ZIP container
 ├── audio/side-a.m4a            AAC-LC, one continuous recording per side
 ├── audio/side-b.m4a            (absent while a side is blank)
 ├── artwork/…                   optional images in fixed physical proportions
-└── docs/…                      optional booklet.html and notes.md
+└── docs/…                      optional booklet.html, notes.md and license.txt
 ```
 
 | | |
@@ -45,7 +45,7 @@ Physical trim size, no bleed. Recommended 24 px/mm, minimum 12 px/mm, aspect wit
 | Label A / B | 89.0 × 42.0 | 2136 × 1008 | 1068 × 504 |
 | J-card front | 63.5 × 101.6 | 1524 × 2438 | 762 × 1219 |
 | J-card spine | 12.7 × 101.6 | 305 × 2438 | 152 × 1219 |
-| J-card back flap | 15.9 × 101.6 | 382 × 2438 | 191 × 1219 |
+| J-card back flap | 25.4 × 101.6 | 610 × 2438 | 305 × 1219 |
 | Booklet panel | 63.5 × 101.6 | 1524 × 2438 | 762 × 1219 |
 | Thumbnail | square | 1024 × 1024 | 256 × 256 |
 
@@ -71,6 +71,32 @@ through. See the [templates](templates/).
 | [`tools/`](tools/) | Validator, template and example generators, self-test (Python 3, standard library) |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version history |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to propose changes |
+
+## Licensing your cassette
+
+A cassette can say who owns its contents and how it may be shared. Put a `rights` object in `cassette` and,
+if you like, the full terms as a text file in the archive ([§6.4](oTAPE-1.0.md#64-rights-and-licence)):
+
+```json
+"cassette": {
+  "title": "Night Drive",
+  "rights": {
+    "copyright": "© 2026 Jan Osio",
+    "license": "CC-BY-NC-SA-4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "file": "docs/license.txt"
+  }
+}
+```
+
+- `license` is an [SPDX](https://spdx.org/licenses/) expression (`CC-BY-4.0`, `CC0-1.0`, `MIT` …),
+  `LicenseRef-<name>` for your own terms, or `all-rights-reserved`.
+- `file` is UTF-8 plain text or Markdown, never HTML. When present, it is the authoritative text.
+- Players show it in the cassette's info view. Dubs keep it unchanged. It is information, not DRM: nothing
+  refuses to play or copy a cassette because of it.
+
+This is the licence of the *cassette's contents*. The licence of *this specification* is a different thing: see
+[Licence](#licence) below.
 
 ## Validate a cassette
 

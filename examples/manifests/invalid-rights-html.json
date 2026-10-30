@@ -1,0 +1,25 @@
+{
+  "format": "oTAPE",
+  "format_version": "1.0",
+  "cassette": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "title": "Night Drive",
+    "type": "C60",
+    "side_length_seconds": 1800,
+    "created_at": "2026-10-28T22:00:00Z",
+    "rights": {
+      "license": "LicenseRef-my-terms",
+      "file": "docs/license.html"
+    }
+  },
+  "sides": {
+    "A": {
+      "write_protect": "intact",
+      "audio": null
+    },
+    "B": {
+      "write_protect": "intact",
+      "audio": null
+    }
+  }
+}

@@ -148,7 +148,7 @@ example.otape
 │   ├── jcard-flap.png
 │   ├── booklet-01.png …        booklet panels in reading order
 │   └── thumbnail.png
-├── docs/                       OPTIONAL  booklet.html, notes.md (§12.7)
+├── docs/                       OPTIONAL  booklet.html, notes.md (§12.7), license.txt (§6.4)
 └── extras/                     OPTIONAL  implementation data (§15.3)
 ```
 
@@ -279,6 +279,7 @@ All keys use `snake_case`. Side keys are the uppercase letters `"A"` and `"B"` e
 | `created_with` / `modified_with` | string | no | Application name and version |
 | `generation` | integer | no | 0 = original, 1 = first dub, and so on |
 | `source_cassette_id` | string (UUID) | no | For a dub: the cassette it was copied from |
+| `rights` | object | no | Copyright and licence of the contents ([§6.4](#64-rights-and-licence)) |
 
 ### 6.3 Example
 
@@ -304,6 +305,38 @@ A minimal valid manifest (blank C60):
 
 A complete example with every field is in [`examples/manifests/manifest-full.json`](examples/manifests/manifest-full.json).
 Complete example cassettes are in [`examples/files/`](examples/files).
+
+### 6.4 Rights and licence
+
+`cassette.rights` says who owns the contents of the cassette and on what terms they may be shared:
+
+```json
+"rights": {
+  "copyright": "© 2026 Jan Osio",
+  "license": "CC-BY-NC-SA-4.0",
+  "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "file": "docs/license.txt"
+}
+```
+
+| Key | Type | Req. | Description |
+| --- | --- | --- | --- |
+| `copyright` | string | no | Copyright notice, e.g. `© 2026 Jan Osio` |
+| `license` | string | no | An [SPDX license expression](https://spdx.org/licenses/), e.g. `CC-BY-4.0`, `CC0-1.0` or `CC-BY-4.0 OR MIT`; `LicenseRef-<name>` for a custom licence; or `all-rights-reserved` |
+| `license_url` | string (URI) | no | Where the full licence text can be read |
+| `file` | path | no | The full licence or terms inside the archive. Recommended name: `docs/license.txt`. |
+
+- The rights cover the whole cassette: audio, artwork, J-card and documents. Rights of individual pieces (e.g.
+  songs on a mixtape) belong in the licence text or in `docs/notes.md`.
+- `file` **MUST** be UTF-8 plain text (`.txt`) or CommonMark Markdown (`.md`). It **MUST NOT** be HTML.
+- If `file` is present, its text is the authoritative statement of the terms. `license` is a machine-readable
+  summary for searching and filtering, and **SHOULD** agree with it.
+- When the licence is custom, writers **SHOULD** use `LicenseRef-<name>` together with `file`.
+- Players **SHOULD** show the copyright notice and licence in the cassette's information view, and **SHOULD**
+  offer to show `file`.
+- `rights` is information, not DRM. Readers **MUST NOT** refuse to play, copy or dub a cassette because of it.
+- A writer making a dub ([§13.2](#132-event-types)) **MUST** copy `rights` and its `file` unchanged. Editors
+  **MUST NOT** remove or change `rights` unless the user does so explicitly.
 
 ---
 
@@ -553,7 +586,7 @@ The printed `tracklist` is what the creator wrote on the card. It is independent
 | --- | --- | --- |
 | Front | 63.5 × 101.6 | Inside a 3.0 mm safe area: title (font role, cap ≈ 5 mm), subtitle (sans ≈ 2.4 mm), creator, then the track lists (`SIDE A`, `SIDE B`, sans ≈ 2 mm), then the dedication |
 | Spine | 12.7 × 101.6 | `spine.text`, wide bold sans, cap ≈ 3 mm, centred, reading top to bottom ([§11.3](#113-reading-direction)) |
-| Flap | 15.9 × 101.6 | `flap.text`, sans ≈ 2 mm, centred, reading top to bottom |
+| Flap | 25.4 × 101.6 | `flap.text`, sans ≈ 2 mm, centred, reading top to bottom |
 
 ### 11.3 Reading direction
 
@@ -596,7 +629,7 @@ long edge.
 | `label_b` | `artwork/label-b.png` | 89.0 × 42.0 | 2.1190 | **2136 × 1008** | 1068 × 504 | keep-out transparent |
 | `jcard_front` | `artwork/jcard-front.jpg` | 63.5 × 101.6 | 0.6250 | **1524 × 2438** | 762 × 1219 | no |
 | `jcard_spine` | `artwork/jcard-spine.png` | 12.7 × 101.6 | 0.1250 | **305 × 2438** | 152 × 1219 | no |
-| `jcard_flap` | `artwork/jcard-flap.png` | 15.9 × 101.6 | 0.1565 | **382 × 2438** | 191 × 1219 | no |
+| `jcard_flap` | `artwork/jcard-flap.png` | 25.4 × 101.6 | 0.2500 | **610 × 2438** | 305 × 1219 | no |
 | `booklet.panels[]` | `artwork/booklet-NN.png` | 63.5 × 101.6 | 0.6250 | **1524 × 2438** | 762 × 1219 | no |
 | `thumbnail` | `artwork/thumbnail.png` | n/a | 1.0000 | **1024 × 1024** | 256 × 256 | yes |
 
@@ -657,7 +690,7 @@ Side B's face has the same layout. The cassette is turned over, not mirrored.
 
 ![J-card template](templates/jcard-outside.svg)
 
-Unfolded outside, left to right: **flap 15.9 | spine 12.7 | front 63.5**, all 101.6 mm high, 92.1 mm wide in
+Unfolded outside, left to right: **flap 25.4 | spine 12.7 | front 63.5**, all 101.6 mm high, 101.6 mm wide in
 total. Each panel is a separate image.
 
 - Safe area: 3.0 mm on the front, 1.5 mm on the spine and flap.
@@ -817,12 +850,13 @@ A conforming recorder is a player that additionally:
 - records over a side in place and updates `recorded_frames` ([§9](#9-recording));
 - refuses to record on `broken` sides and offers "cover with tape" ([§8](#8-write-protection));
 - writes `mimetype` first ([§3.2](#32-the-mimetype-entry)), `aac-lc` audio and a valid manifest;
-- preserves unknown data ([§15.2](#152-preservation)).
+- preserves unknown data ([§15.2](#152-preservation)) and, when dubbing, copies `rights` ([§6.4](#64-rights-and-licence)).
 
 ### 16.4 Editor
 
 A conforming editor changes metadata, appearance, J-card or artwork without re-encoding audio, enforces
-artwork proportions ([§12.1](#121-general-rules)) and preserves unknown data.
+artwork proportions ([§12.1](#121-general-rules)) and preserves unknown data and `rights`
+([§6.4](#64-rights-and-licence)).
 
 ---
 
@@ -834,6 +868,8 @@ artwork proportions ([§12.1](#121-general-rules)) and preserves unknown data.
 - **Images.** Enforce the pixel limits before decoding ([§3.5](#35-limits)).
 - **HTML booklets** are untrusted content. Render them only in a sandbox with scripts and network disabled
   ([§12.7](#127-booklet-and-documents)).
+- **Licence files** are plain text or Markdown, never HTML. Render Markdown without raw HTML
+  ([§6.4](#64-rights-and-licence)).
 - **Privacy.** History and metadata can contain names, places and dates. Applications **SHOULD** let users see
   and remove them before sharing a cassette.
 - **No DRM.** `write_protect` and `id` provide no security and must not be relied on as such.
@@ -892,8 +928,8 @@ All values below, and those of §12, are also in [`geometry/otape-geometry-1.0.j
 | Label | 89.0 | 42.0 | n/a |
 | J-card front | 63.5 | 101.6 | n/a |
 | J-card spine | 12.7 | 101.6 | n/a |
-| J-card flap | 15.9 | 101.6 | n/a |
-| J-card unfolded (outside) | 92.1 | 101.6 | n/a |
+| J-card flap | 25.4 | 101.6 | n/a |
+| J-card unfolded (outside) | 101.6 | 101.6 | n/a |
 | Booklet panel | 63.5 | 101.6 | n/a |
 | Case | 109.0 | 70.0 | 17.0 |
 
@@ -905,7 +941,7 @@ All values below, and those of §12, are also in [`geometry/otape-geometry-1.0.j
 | Label | 2136 × 1008 | 1068 × 504 |
 | J-card front / booklet panel | 1524 × 2438 | 762 × 1219 |
 | J-card spine | 305 × 2438 | 152 × 1219 |
-| J-card flap | 382 × 2438 | 191 × 1219 |
+| J-card flap | 610 × 2438 | 305 × 1219 |
 
 ### B.3 Reels and tape packs
 

@@ -228,6 +228,7 @@ def check_manifest(m: object, r: Report, archive: zipfile.ZipFile | None) -> Non
     check_appearance(m, r)
     check_artwork(m, r, archive)
     check_history(m, r, side_frames)
+    check_rights(cassette, r, archive)
 
     ext = m.get("extensions", {})
     if isinstance(ext, dict):
@@ -332,6 +333,42 @@ def check_artwork(m: dict, r: Report, archive: zipfile.ZipFile | None) -> None:
         min_h = round(slot["height"] * res["minimum_px_per_mm"])
         if w < min_w or h < min_h:
             r.warn("§12.1", f"{where}: {w} × {h} px is below the minimum {min_w} × {min_h} px (12 px/mm)")
+
+
+def check_rights(cassette: dict, r: Report, archive: zipfile.ZipFile | None) -> None:
+    rights = cassette.get("rights")
+    if rights is None:
+        return
+    if not isinstance(rights, dict):
+        r.error("§6.4", "cassette.rights must be an object")
+        return
+    license_ = rights.get("license")
+    if license_ is not None:
+        tokens = re.findall(r"[()]|[^\s()]+", license_) if isinstance(license_, str) else []
+        words = [t for t in tokens if t not in ("(", ")", "AND", "OR", "WITH")]
+        if license_ != "all-rights-reserved" and (not words or not all(
+                re.fullmatch(r"[A-Za-z0-9.+-]+", t) for t in words)):
+            r.warn("§6.4", f"rights.license {license_!r} does not look like an SPDX expression")
+        elif isinstance(license_, str) and "LicenseRef-" in license_ and "file" not in rights:
+            r.warn("§6.4", "a LicenseRef- licence should come with rights.file")
+    path = rights.get("file")
+    if path is None:
+        return
+    if not safe_path(path):
+        r.error("§3.3", f"rights.file is not a safe archive path: {path!r}")
+        return
+    if not path.lower().endswith((".txt", ".md")):
+        r.error("§6.4", f"rights.file must be plain text or Markdown, not {path}")
+        return
+    if archive is None:
+        return
+    if path not in archive.namelist():
+        r.error("§16.1", f"rights.file: {path} is not in the archive")
+        return
+    try:
+        archive.read(path).decode("utf-8")
+    except UnicodeDecodeError:
+        r.error("§6.4", f"rights.file: {path} is not valid UTF-8")
 
 
 def check_html(html: str, r: Report) -> None:
