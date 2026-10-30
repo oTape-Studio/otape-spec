@@ -128,6 +128,11 @@ A recorder also overwrites in place, keeps `recorded_frames` as a high-water mar
 tabs, and preserves fields and files it doesn't understand. [§16](oTAPE-1.0.md#16-conformance) lists every
 requirement. [`tools/make_examples.py`](tools/make_examples.py) is a short, readable reference writer.
 
+Worked implementations are in [otape-examples](https://github.com/oTape-Studio/otape-examples): small,
+readable players and readers, one folder per language, each citing the specification by section. They are a
+starting point for your own code. The first example is a browser player in plain JavaScript, with no
+dependencies and no build step.
+
 ## Website
 
 [otape.org](https://otape.org) is the public home of the format. It introduces oTAPE and includes the **oTAPE Web Deck**: a working player of about 1,200 lines of plain JavaScript, with no libraries. It plays the reference cassette from the specification, or any `.otape` dropped onto the page. The file stays in the browser and is never uploaded.
