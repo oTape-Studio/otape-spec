@@ -780,8 +780,13 @@ Readers **MUST** ignore event types they don't know, and writers **MUST** keep t
 | identity, metadata, history | counter resets, volume |
 
 **Playing a cassette MUST NOT modify the file.** Players **SHOULD** remember the side and head position per
-`cassette.id`, so a cassette put back into the deck resumes where it was, the way a real tape stays wound
-where you left it.
+`cassette.id`, so a cassette put back into the deck resumes where it was.
+
+That position is player state. It stays with the player on that device and does not travel with the file to
+another device or application. Copies of a file are the same cassette ([§5.2](#52-identity)), so a player that
+keys positions by `cassette.id` resumes every copy at the same place. A physical cassette keeps its position
+mechanically, in the tape wound on its reels. oTAPE deliberately does not store it: the file may be read-only,
+shared, synced or archived, and listening should not create a new version of it.
 
 ---
 
